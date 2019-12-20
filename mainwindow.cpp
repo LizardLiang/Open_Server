@@ -57,6 +57,7 @@ void MainWindow::read_message(){
 void MainWindow::open_server(){
     QString path = m_path->getpath();
     m_config->find_script();
+    m_config->show();
     if(path == nullptr)
         path = R"(E:\server1\run.bat)";
     process->start(path);

@@ -13,13 +13,13 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QListView" name="listView">
+  <widget class="QPlainTextEdit" name="plainTextEdit">
    <property name="geometry">
     <rect>
      <x>10</x>
      <y>20</y>
-     <width>256</width>
-     <height>341</height>
+     <width>441</width>
+     <height>371</height>
     </rect>
    </property>
   </widget>

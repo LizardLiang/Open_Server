@@ -8,6 +8,7 @@
 #include <QMessageBox>
 #include <main_address.h>
 #include <bat_path.h>
+#include <server_config.h>
 
 #include "D:/Famax/MotorTest/testIO/logsystem.h"
 
@@ -28,6 +29,7 @@ private:
     logsystem *m_log = new logsystem;
     main_address *m_address = new main_address();
     bat_path *m_path = new bat_path();
+    server_config *m_config = new server_config();
 
     bool is_connect = false;
     bool is_on = false;
