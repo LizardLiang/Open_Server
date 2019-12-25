@@ -60,7 +60,9 @@ void MainWindow::open_server(){
     m_config->show();
     if(path == nullptr)
         path = R"(E:\server1\run.bat)";
-    process->start(path);
+//    process->setWorkingDirectory(R"(E:\server\serverdata)");
+    process = new QProcess();
+    process->start("cmd.exe", QStringList() << "/c" << R"(E:\server1\run.bat)");
     QString msg_log = QString("Process error - %1").arg(process->errorString());
     emit add_log(msg_log);
     connect(process, &QProcess::readyReadStandardOutput,
@@ -110,7 +112,7 @@ void MainWindow::on_fivem_start_clicked()
     if(not file.exists()){
         msg_screen = QString("伺服器資料不存在\n");
         ui->plainTextEdit->appendPlainText(msg_screen);
-        if(is_connect and m_socket->isOpen())
+        if(is_connect)
             m_socket->write("Open_Server");
         else{
             ui->plainTextEdit->appendPlainText("請先進行連線再點擊開服\n");
@@ -123,14 +125,20 @@ void MainWindow::on_fivem_start_clicked()
 }
 
 void MainWindow::close_server(){
-    QString msg_log = QString("伺服器目前狀態 - %1").arg(process->isOpen());
-    m_log->add_log(msg_log);
-    if(process->pid() != nullptr){
+    //QString msg_log = QString("伺服器目前狀態 - %1").arg(process->isOpen());
+    //m_log->add_log(msg_log);
+    //如果有找到pid代表現在伺服器是上線狀態
+    if(process->isOpen()){
         process->kill();
+        process->waitForFinished();
         ui->plainTextEdit->clear();
         ui->plainTextEdit->appendPlainText("伺服器已關閉\n");
         QString msg_send = "伺服器已關閉\n";
-        rec_socket->write(msg_send.toStdString().data());
+        if(rec_socket != nullptr){
+            if(rec_socket->isOpen()){
+                rec_socket->write(msg_send.toStdString().data());
+            }
+        }
         QString msg_log = QString("伺服器目前狀態 - %1").arg(process->isOpen());
         emit add_log(msg_log);
     }

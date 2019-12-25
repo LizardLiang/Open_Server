@@ -5,6 +5,7 @@ server_config::server_config(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::server_config)
 {
+    setAttribute(Qt::WA_QuitOnClose, false);
     ui->setupUi(this);
 }
 
@@ -14,16 +15,36 @@ server_config::~server_config()
 }
 
 void server_config::find_script(){
-    QString path = R"(E:\server1\serverdata\server.cfg)";
+    ui->plainTextEdit->clear();
+    QString path = R"(D:\server\serverdata\server.cfg)";
     QFile file(path);
     if(file.open(QIODevice::ReadOnly)){
         QByteArray data = file.readAll();
         file.close();
-        ui->plainTextEdit->appendPlainText(data);
-        QRegExp key_type("ensure \\w+\\n");
-        int num_script = key_type.indexIn(data);
-//        for(int i = 0; i < num_script; i++){
-//            ui->plainTextEdit->appendPlainText(key_type.cap(i));
-//        }
+        QRegExp key_type("ensure \\w+\\r\\n");
+        mat_pos = 0;
+        while((mat_pos = key_type.indexIn(data, mat_pos)) != -1){
+            QStringList list = key_type.capturedTexts();
+            foreach (QString string, list) {
+                ui->plainTextEdit->appendPlainText(string);
+            }
+
+            mat_pos += key_type.matchedLength();
+            last_script_pos = mat_pos;
+        }
+    }
+}
+
+void server_config::add_script(QString name){
+    QString path = R"(D:\server\serverdata\server.cfg)";
+    QFile file(path);
+    if(file.open(QIODevice::ReadOnly)){
+        QByteArray content = file.readAll();
+        file.close();
+        if(file.open(QIODevice::WriteOnly | QIODevice::Truncate)){
+            content.insert(last_script_pos, "ensure test\r\n");
+            file.write(content);
+            file.close();
+        }
     }
 }

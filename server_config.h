@@ -20,6 +20,12 @@ public:
 
 private:
     Ui::server_config *ui;
+
+    int mat_pos = 0;
+    int last_script_pos = 0;
+
+private slots:
+    void add_script(QString);
 };
 
 #endif // SERVER_CONFIG_H

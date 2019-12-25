@@ -33,7 +33,7 @@ private:
 
     bool is_connect = false;
     bool is_on = false;
-    QProcess *process = new QProcess(this);
+    QProcess *process = new QProcess();
 
     void tcp_server_on();
 
